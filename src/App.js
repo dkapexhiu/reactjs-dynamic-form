@@ -15,7 +15,7 @@ class App extends Component {
     let data = [];
     if (model.id) {
       data = this.state.data.filter(d => {
-        return d.id !== model.id;
+        return d.id != model.id;
       });
     } else {
       model.id = +new Date();
@@ -29,7 +29,7 @@ class App extends Component {
 
   onEdit = id => {
     let record = this.state.data.find(d => {
-      return d.id === id;
+      return d.id == id;
     });
     alert(JSON.stringify(record));
     this.setState({
@@ -64,7 +64,8 @@ class App extends Component {
                 { key: "select", label: "Select", value: "Select" },
                 { key: "albania", label: "Albania", value: "Albania" },
                 { key: "italy", label: "Italy", value: "Italy" }
-              ]
+              ],
+              props: { required: true }
             }
           ]}
           onSubmit={model => {
