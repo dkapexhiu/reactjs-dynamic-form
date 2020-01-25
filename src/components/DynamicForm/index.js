@@ -1,23 +1,23 @@
 import React from "react";
+import ReactDOM from "react-dom";
 import "./form.css";
 
 export default class DynamicForm extends React.Component {
   state = {};
+  constructor(props) {
+    super(props);
+  }
 
   isNameValid() {
     return (
       this.state.name &&
       this.state.name.length >= 3 &&
-      this.state.name.length <= 64
+      this.state.name.length <= 62
     );
   }
 
-  isCountryValid(){
-  	return (
-      this.state.country &&
-      this.state.country.length >= 2 &&
-      this.state.country.length <= 64
-    );
+  isCountryValid() {
+    return this.state.country && this.state.country !== "Select";
   }
 
   onSubmit = e => {
@@ -55,7 +55,7 @@ export default class DynamicForm extends React.Component {
 
   renderForm = () => {
     let model = this.props.model;
-    //let defaultValues = this.props.defaultValues;
+    let defaultValues = this.props.defaultValues;
 
     let formUI = model.map(m => {
       let key = m.key;
@@ -82,9 +82,9 @@ export default class DynamicForm extends React.Component {
         />
       );
 
-      if (type === "radio") {
+      if (type == "radio") {
         input = m.options.map(o => {
-          let checked = o.value === value;
+          let checked = o.value == value;
           return (
             <React.Fragment key={"fr" + o.key}>
               <input
@@ -106,9 +106,9 @@ export default class DynamicForm extends React.Component {
         input = <div className="form-group-radio">{input}</div>;
       }
 
-      if (type === "select") {
+      if (type == "select") {
         input = m.options.map(o => {
-          //let checked = o.value === value;
+          let checked = o.value == value;
           console.log("select: ", o.value, value);
           return (
             <option
@@ -135,7 +135,7 @@ export default class DynamicForm extends React.Component {
         );
       }
 
-      if (type === "checkbox") {
+      if (type == "checkbox") {
         input = m.options.map(o => {
           //let checked = o.value == value;
           let checked = false;
@@ -174,10 +174,12 @@ export default class DynamicForm extends React.Component {
           <label className="form-error">
             {key === "name" &&
               !this.isNameValid() &&
-              "Should not be empty & between 3 and 64 characters"}
+              "Should not be empty & between 3 and 62 chars"}
+          </label>
+          <label className="form-error">
             {key === "country" &&
               !this.isCountryValid() &&
-              "Should not be empty & between 2 and 64 characters"}
+              "Select one valid country"}
           </label>
         </div>
       );
@@ -202,7 +204,7 @@ export default class DynamicForm extends React.Component {
             <button
               className="sbtBtn"
               type="submit"
-              disabled={!this.isNameValid && !this.isCountryValid}
+              disabled={!this.isNameValid() || !this.isCountryValid()}
             >
               Save
             </button>
